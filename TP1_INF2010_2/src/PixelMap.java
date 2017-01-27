@@ -121,8 +121,21 @@ public class PixelMap
 		{
 			for(int col=0; col<width; col++)
 			{
-				
+				switch (imageType){
+				case BW:
 					imageData[row][col] = new BWPixel();
+					break;
+				case Gray:
+					imageData[row][col] = new GrayPixel();
+					break;
+				case Color:
+					imageData[row][col] = new ColorPixel();
+					break;
+				case Transparent:
+					imageData[row][col] = new TransparentPixel();
+					break;
+				}
+					
 				
 			}
 		}

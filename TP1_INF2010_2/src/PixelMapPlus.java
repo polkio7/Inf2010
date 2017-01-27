@@ -60,6 +60,13 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 	{
 		// compl�ter
 		
+		for(int row=0; row<height; row++)
+		{
+			for(int col=0; col<width ; col++)
+			{
+				imageData[row][col] = imageData[row][col].Negative(); 
+			}
+		}
 	}
 	
 	/**
@@ -68,7 +75,13 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 	public void convertToBWImage()
 	{
 		// compl�ter
-		
+		for(int row=0; row<height; row++)
+		{
+			for(int col=0; col<width ; col++)
+			{
+				imageData[row][col] = imageData[row][col].toBWPixel(); 
+			}
+		}
 	}
 	
 	/**
@@ -77,7 +90,13 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 	public void convertToGrayImage()
 	{
 		// compl�ter
-		
+		for(int row=0; row<height; row++)
+		{
+			for(int col=0; col<width ; col++)
+			{
+				imageData[row][col] = imageData[row][col].toGrayPixel(); 
+			}
+		}
 	}
 	
 	/**
@@ -86,13 +105,25 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 	public void convertToColorImage()
 	{
 		// compl�ter
-		
+		for(int row=0; row<height; row++)
+		{
+			for(int col=0; col<width ; col++)
+			{
+				imageData[row][col] = imageData[row][col].toColorPixel(); 
+			}
+		}
 	}
 	
 	public void convertToTransparentImage()
 	{
 		// compl�ter
-		
+		for(int row=0; row<height; row++)
+		{
+			for(int col=0; col<width ; col++)
+			{
+				imageData[row][col] = imageData[row][col].toTransparentPixel(); 
+			}
+		}
 	}
 	
 	/**
@@ -129,12 +160,17 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 	public void inset(PixelMap pm, int row0, int col0)
 	{
 		// compl�ter
-		//Check si ne dépasse pas l'image ou l'image à copier
-		for(int row=row0; row<height && (row-row0)<pm.height; row++)
+		//Check si le inset ne dépasse pas l'image
+		if(width < row0 || height < col0)
+			throw new IllegalArgumentException();
+		
+		for(int row=0; row < pm.height; row++)
 		{
-			for(int col=col0; col<width && row<width && (row-row0)<pm.width; col++)
+			for(int col=0;col < pm.height; col++)
 			{
-				this.imageData[row][col] = pm.imageData[row-row0][col-col0];
+				//inset negatif
+				if( 0<=(row+row0) && 0<=(col+col0) )
+					this.imageData[row+row0][col+col0] = pm.imageData[row][col];
 			}
 		}
 	}
@@ -150,7 +186,8 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 		// compl�ter	
 		//Creer une image blanche temporaire de la nouvelle taille
 		PixelMap imageTemp = new PixelMap(this.imageType,h,w);
-		
+		//si tu crop plus petit que l'image initiale
+		if(h<height && w<width)
 		//Copie les infos nécessaire
 		for(int row=0; row<imageTemp.height; row++)
 		{
@@ -160,7 +197,9 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 			}
 		}
 		
-		
+		imageData=imageTemp.imageData;
+		height=h;
+		width=w;
 	}
 	
 	/**
@@ -171,21 +210,18 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 		// compl�ter		
 		PixelMap imageTemp = new PixelMap(this.imageType,height,width);
 		
-		// conditions
-		/*
-		 * 
-		 */
 		//copie à la position translate
-		
-		for(int row=rowOffset; row<height; row++)
+		for(int row=0; row<height; row++)
 		{
-			for(int col=colOffset; col<width; col++)
+			for(int col=0; col<width; col++)
 			{
-				imageTemp.imageData[row][col] = this.imageData[row][col];
+				//Condition pour translate + et translate -
+				if(0<=row-rowOffset && row-rowOffset < height && 0<=col-colOffset && col-colOffset < width)
+					imageTemp.imageData[row][col] = this.imageData[row-rowOffset][col-colOffset];
 			}
 		}
 		//Fait pointer imageData sur la nouvelle imageData créé
-		
+		imageData = imageTemp.imageData;
 	}
 	
 	/**
@@ -223,5 +259,5 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 					imageData[row][col] = newPixel;
 			}
 		}
-	}
-}
+	}//fin méthode
+}//fin classe
