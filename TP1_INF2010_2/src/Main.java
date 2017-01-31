@@ -10,8 +10,8 @@ public class Main
 		/**
 		 * Exercice 1
 		 */
-		/*
-		PixelMap pmc = new PixelMap("./src/ed.ppm");
+		
+		/*PixelMap pmc = new PixelMap("./src/ed.ppm");
 		PixelMap pmg = pmc.toGrayImage();
 		PixelMap pmb = pmc.toBWImage();
 
@@ -30,8 +30,8 @@ public class Main
 		new DisplayImageWindow(wName, pmb, 50+100, 50+100);
 
 		wName = "Edsger Dijkstra (Transparent)";
-		new DisplayImageWindow(wName, pmt, 200, 200);
-		*/
+		new DisplayImageWindow(wName, pmt, 200, 200);*/
+		
 		/**
 		 * Exercice 2
 		 */
@@ -40,8 +40,9 @@ public class Main
 		PixelMapPlus pmp = new PixelMapPlus("./src/ed.ppm");
 		
 		PixelMapPlus hpmp = new PixelMapPlus( pmp );
-		
-		
+		/*
+		pmp.zoomIn(0,pmp.getHeight(), 2);
+		new DisplayImageWindow("TESTZOOM", pmp);
 		hpmp.crop(200, 200);
 		new DisplayImageWindow("TEST", hpmp, 200+50, 200+50);
 		
@@ -65,8 +66,8 @@ public class Main
 		newColors[1] = 255;
 		newColors[2] = 255;
 		gpmp.replaceColor(new ColorPixel(tMin), new ColorPixel(tMax), new ColorPixel(newColors));
-		new DisplayImageWindow("TEST", gpmp, 250+50, 250+50);
-		/*
+		new DisplayImageWindow("TEST", gpmp, 250+50, 250+50);*/
+		
 		hpmp.zoomIn(0, 0, 2);
 		hpmp.resize(hpmp.width/2, hpmp.height/2);
 		int[] tMin = new int[3];
@@ -106,8 +107,8 @@ public class Main
 		pmp.inset(bwpmp, 0, pmp.getWidth()/2);
 		pmp.inset(npmp, pmp.getHeight()/2, pmp.getWidth()/2);
 
-		wName = "Edsger Dijkstra";
+		String wName = "Edsger Dijkstra";
 		new DisplayImageWindow(wName, pmp);
-	*/
+	
 	}
 }

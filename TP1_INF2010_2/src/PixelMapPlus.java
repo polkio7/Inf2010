@@ -136,6 +136,17 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 	public void rotate(int x, int y, double angleRadian)
 	{
 		// compl�ter
+		double rotMat [][]= new double[][] {
+			{Math.cos(angleRadian), Math.sin(angleRadian), -Math.cos(angleRadian)*x -Math.sin(angleRadian)*y+x},
+			{-Math.sin(angleRadian), Math.cos(angleRadian), Math.sin(angleRadian)*x -Math.cos(angleRadian)*y+y},
+			{0,0,1}
+		};
+		PixelMap imageTemp = new PixelMap(this.imageType, height, width);
+		for(int row = 0; row < height; row++){
+			for(int col = 0; col < width; col++){
+				
+			}
+		}
 		
 	}
 	
@@ -149,9 +160,24 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 		if(w < 0 || h < 0)
 			throw new IllegalArgumentException();
 		
-		// compl�ter
-		clearData();
+		// compl�ter - fait
 		
+		//Creer une image blanche temporaire de la nouvelle taille
+		PixelMap imageTemp = new PixelMap(this.imageType,h,w);
+		
+		double xRatio = w / (double)this.width;
+		double yRatio = h / (double)this.height;
+		
+		for(int row=0; row < h; row++)
+		{
+			for(int col=0; col < w; col++)
+			{
+				imageTemp.imageData[row][col] = this.imageData[(int) (row/yRatio)][(int) (col/xRatio)];
+			}
+		}
+		imageData = imageTemp.imageData;
+		height = h;
+		width = w;
 	}
 	
 	/**
@@ -166,10 +192,10 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 		
 		for(int row=0; row < pm.height; row++)
 		{
-			for(int col=0;col < pm.height; col++)
+			for(int col=0;col < pm.width; col++)
 			{
 				//inset negatif
-				if( 0<=(row+row0) && 0<=(col+col0) )
+				if( 0<=(row+row0) && 0<=(col+col0) && height>(row+row0) && width>(col+col0) )
 					this.imageData[row+row0][col+col0] = pm.imageData[row][col];
 			}
 		}
@@ -235,8 +261,27 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 		if(zoomFactor < 1.0)
 			throw new IllegalArgumentException();
 		
-		// compl�ter
-		
+		// compl�ter - fait
+		int semiWidth = (int) (width/(zoomFactor*2));
+		int semiHeight = (int) (height/(zoomFactor*2));
+		if(x - semiWidth <= 0)
+			x += semiWidth - x;
+		if(x + semiWidth >= width)
+			x -= width + (semiWidth - x);
+		if(y - semiHeight <= 0)
+			y += semiHeight - y;
+		if(y + semiHeight >= height)
+			y -= height + (semiHeight - y);
+		PixelMap imageTemp = new PixelMap(this.imageType,(int)(height/zoomFactor),(int)(width/zoomFactor));
+		for(int row=0; row<height/zoomFactor; row++){
+			for(int col=0; col<width/zoomFactor; col++){
+				imageTemp.imageData[(int) (row)][(int) (col)] = this.imageData[(int) (row+y-height/(2*zoomFactor))][(int) (col+x-width/(2*zoomFactor))];
+			}
+		}
+		PixelMapPlus imageFinale = new PixelMapPlus(imageTemp);
+		imageFinale.resize(width, height);
+		imageData = imageFinale.imageData;
+
 	}
 
 	/**
@@ -255,7 +300,7 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 			for(int col=0; col<width ;col++)
 			{
 				//	plus grand que le min 					et 					plus petit que le max
-				if( min.compareTo(imageData[row][col]) == 1  && imageData[row][col].compareTo(max) == -1)
+				if( imageData[row][col].compareTo(min) == 1  && imageData[row][col].compareTo(max) == -1)
 					imageData[row][col] = newPixel;
 			}
 		}
