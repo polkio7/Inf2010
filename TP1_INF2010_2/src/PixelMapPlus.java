@@ -142,6 +142,7 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 			{0,0,1}
 		};
 		PixelMap imageTemp = new PixelMap(this.imageType, height, width);
+		
 		for(int row = 0; row < height; row++){
 			for(int col = 0; col < width; col++){
 				

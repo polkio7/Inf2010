@@ -32,6 +32,7 @@ public class FormValidator
 		
 		// Lecture des images correspondant aux codes et tranformations 
 		PixelMapPlus[] pm =  new PixelMapPlus[ codeLength ];
+		
 		for(int i=0; i<codeLength; i++)
 		{
 			String letter = code.substring(i, i+1);
@@ -89,6 +90,7 @@ public class FormValidator
 					break;
 				default: ; // 0
 			}
+			
 		}
 		
 		// Creation de l'image cible a afficher
@@ -115,6 +117,7 @@ public class FormValidator
 			
 		in.close();
 		di.dispose();
+		
 	}
 	
 	/**
@@ -131,7 +134,15 @@ public class FormValidator
 		Random generator = new Random( System.nanoTime() );
 		
 		// compléter
-		
+		for(int i =0;i<length;i++){
+			
+			charKey[i] = (char)(65 + generator.nextInt(26)); 
+		}
+		String s="";
+		for(int i =0;i<length;i++){
+			s += charKey[i]; 
+		}
+		return s;
 	}
 	
 	/**
@@ -147,7 +158,12 @@ public class FormValidator
 		Random generator = new Random( System.nanoTime() );
 		
 		// compléter
+		for(int i =0;i<nb;i++){
+			
+			charTransform[i] = generator.nextInt(10); 
+		}
 		
+		return charTransform;
 	}
 
 }

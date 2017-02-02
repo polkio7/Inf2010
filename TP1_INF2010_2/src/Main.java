@@ -109,6 +109,8 @@ public class Main
 
 		String wName = "Edsger Dijkstra";
 		new DisplayImageWindow(wName, pmp);
+		
+		
 	
 	}
 }
