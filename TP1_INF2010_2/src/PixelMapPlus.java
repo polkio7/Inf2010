@@ -145,9 +145,15 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 		
 		for(int row = 0; row < height; row++){
 			for(int col = 0; col < width; col++){
-				
+				double[] pos = new double[2]; 
+				pos[0] = (rotMat[0][0]*col + rotMat[0][1]*row + rotMat[0][2]);
+				pos[1] = (rotMat[1][0]*col + rotMat[1][1]*row + rotMat[1][2]);
+				if(pos[0] >= 0 && pos[0] < width && pos[1] >= 0 && pos[1] < height){
+					imageTemp.imageData[row][col] = imageData[(int) pos[1]][(int) pos[0]];
+				}
 			}
 		}
+		imageData = imageTemp.imageData;
 		
 	}
 	
@@ -188,7 +194,7 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 	{
 		// compl�ter
 		//Check si le inset ne dépasse pas l'image
-		if(width < row0 || height < col0)
+		if(height < row0 || width < col0)
 			throw new IllegalArgumentException();
 		
 		for(int row=0; row < pm.height; row++)
@@ -273,15 +279,14 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 			y += semiHeight - y;
 		if(y + semiHeight >= height)
 			y -= height + (semiHeight - y);
-		PixelMap imageTemp = new PixelMap(this.imageType,(int)(height/zoomFactor),(int)(width/zoomFactor));
+		PixelMapPlus imageTemp = new PixelMapPlus(this.imageType,(int)(height/zoomFactor),(int)(width/zoomFactor));
 		for(int row=0; row<height/zoomFactor; row++){
 			for(int col=0; col<width/zoomFactor; col++){
 				imageTemp.imageData[(int) (row)][(int) (col)] = this.imageData[(int) (row+y-height/(2*zoomFactor))][(int) (col+x-width/(2*zoomFactor))];
 			}
 		}
-		PixelMapPlus imageFinale = new PixelMapPlus(imageTemp);
-		imageFinale.resize(width, height);
-		imageData = imageFinale.imageData;
+		imageTemp.resize(width, height);
+		imageData = imageTemp.imageData;
 
 	}
 
