@@ -219,13 +219,13 @@ public class PixelMapPlus extends PixelMap implements ImageOperations
 		// compl�ter	
 		//Creer une image blanche temporaire de la nouvelle taille
 		PixelMap imageTemp = new PixelMap(this.imageType,h,w);
-		//si tu crop plus petit que l'image initiale
-		if(h<height && w<width)
 		//Copie les infos nécessaire
 		for(int row=0; row<imageTemp.height; row++)
 		{
 			for(int col=0; col<imageTemp.width ;col++)
 			{
+				//si tu crop plus petit que l'image initiale
+				if(row<height && col<width)
 				imageTemp.imageData[row][col] = this.imageData[row][col];
 			}
 		}
