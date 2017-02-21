@@ -16,8 +16,63 @@ static public  double solve(String expresion){
 		Stack<String> stack = new Stack<String>();
 		//A complete
 		if(isEquilibre(expresion)){
-			
+			Vector<String> exprTokens = getTokens(expresion);
+			for(int i = exprTokens.size()-1; i >= 0; i--){
+				String elem = exprTokens.elementAt(i);
+				switch(elem){
+				case "+":
+					String val = stack.pop();
+					double resultat = 0;
+					while(!val.equals(")")){
+						resultat += Double.parseDouble(val);
+						val = stack.pop();
+					}
+					stack.push(""+resultat);
+					break;
+				case "-":
+					val = stack.pop();
+					resultat = Double.parseDouble(val);
+					val = stack.pop();
+					while(!val.equals(")")){
+						resultat -= Double.parseDouble(val);
+						val = stack.pop();
+					}
+					stack.push(""+resultat);
+					break;
+				case "*":
+					val = stack.pop();
+					resultat = Double.parseDouble(val);
+					val = stack.pop();
+					while(!val.equals(")")){
+						resultat *= Double.parseDouble(val);
+						val = stack.pop();
+					}
+					stack.push(""+resultat);
+					break;
+				case "/":
+					val = stack.pop();
+					resultat = Double.parseDouble(val);
+					val = stack.pop();
+					while(!val.equals(")")){
+						resultat /= Double.parseDouble(val);
+						val = stack.pop();
+					}
+					stack.push(""+resultat);
+					break;
+				case "("://Rien a faire pour cette parenthese
+					break;
+				case ")":
+					stack.push(elem);
+					break;
+				default:
+					stack.push(elem);
+					break;
+					
+				}
+			}
+			return Double.parseDouble(stack.peek());
 		}
+		return -1;
 }		
 /*
  * cette fonction v�rifier si une expression est �quilibree 

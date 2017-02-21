@@ -18,13 +18,13 @@ public class LispMain
 		}
 		
 		//test des expr�ssions
-		/*
+		
 		System.out.println("\nTests de r�solution:\n");
 		for(int t=0;t<tests.length;t++){
 			if(Lisp.isEquilibre(tests[t])==true){
 				System.out.println(tests[t]+"\t= "+ Lisp.solve(tests[t]));
 			}	
-		}*/
+		}
 	}
 	
 }	
