@@ -43,12 +43,17 @@ public class QuadraticSpacePerfectHashing<AnyType>
 	{
 		// A completer
 		//System.out.println("Cle de x : " + getKey(x) + " // Item a la cle de x " + items[getKey(x)]);
-		return ( containsKey(getKey(x)) );
+		if(containsKey(getKey(x)))
+			return ( items[getKey(x)].equals(x) );
+		else 
+			return false;
+		
 	}
 
 	public void remove (AnyType x) {
 		// A completer
-		items[getKey(x)] = null;
+		if(containsValue(x))
+			items[getKey(x)] = null;
 	}
 
 	public int getKey (AnyType x) {
@@ -64,6 +69,7 @@ public class QuadraticSpacePerfectHashing<AnyType>
 		if(array == null || array.size() == 0)
 		{
 			// A completer
+			items = null;
 			return;
 		}
 		if(array.size() == 1)
@@ -80,8 +86,8 @@ public class QuadraticSpacePerfectHashing<AnyType>
 		{
 			items = null;
 			// A completer
-			a=generator.nextInt( (int) Math.pow(2, 16) ) + 1;
-			b=generator.nextInt( (int) Math.pow(2, 16) );
+			a=generator.nextInt( p ) + 1;
+			b=generator.nextInt( p );
 		
 		}
 		while( collisionExists( array ));
@@ -91,7 +97,7 @@ public class QuadraticSpacePerfectHashing<AnyType>
 	private boolean collisionExists(ArrayList<AnyType> array)
 	{
 		// A completer
-		System.out.println("a : " + a + "// b : " + b);
+		//System.out.println("a : " + a + "// b : " + b);
 		
 		items = (AnyType[]) new Object[array.size()*array.size()];
 		for(int i=0;i<array.size();i++){
@@ -109,9 +115,9 @@ public class QuadraticSpacePerfectHashing<AnyType>
 		// A completer
 		for(int i=0;i<Size();i++){
 			if(items[i]!=null)
-				result = result + "("+ i +","+items[i]+"), ";
+				result += "("+ i +","+items[i]+"), ";
 		}
-		result += '.';
+		result = result.substring(0, result.length()-2) + ".";
 		return result; 
 	}
 }

@@ -25,6 +25,7 @@ public class HashFunctions
         /**
          * Exercice 1
          */
+        
         // On cree un QuadraticSpacePerfectHashing et insere les donnees
         System.out.println( "QuadraticSpacePerfectHashing:");
         System.out.println();
@@ -78,6 +79,8 @@ public class HashFunctions
         System.out.println( "Size: " + pfhash.Size() );
         System.out.println();
         
+        System.out.println(pfhash.toString());
+        
         // Verifie qu'il fonctionne comme prevu
         System.out.println( 100 + " est present: " + pfhash.containsValue(100) );
         System.out.println(  99 + " est present: " + pfhash.containsValue( 99) );
@@ -124,10 +127,22 @@ public class HashFunctions
     public static ArrayList<Integer> randomIntegers(int length)
     {
         // A complèter
-        
-        
-        
-        return null;
+    	Random generator = new Random( System.nanoTime() );
+        ArrayList<Integer> aReturn = new ArrayList<Integer>();
+        int nextInt=0;
+        boolean hasDoublons=false;
+        for(int i=0;i<length;i++){
+        	nextInt = generator.nextInt(p);
+        	hasDoublons=false;
+        	for(int j=0;j<aReturn.size();j++){
+        		if(nextInt==aReturn.get(j))
+        			hasDoublons = true;
+        	}
+        	if(!hasDoublons)	
+        		aReturn.add(nextInt);
+        }
+    	
+        return aReturn;
     }
 }
 
