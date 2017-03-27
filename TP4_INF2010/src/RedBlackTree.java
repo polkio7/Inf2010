@@ -39,7 +39,16 @@ public class RedBlackTree<T extends Comparable<? super T> >
       return find(root, key);
    }
    private T find(RBNode<T> current, int key){
-      // à completer 
+	  if(current.value == null)
+		   return null;
+	  else if(key == (int)current.value)
+		  return current.value;
+	  else if(key < ((int)current.value))
+    	  return find(current.leftChild, key);
+	  else if(key > ((int)current.value))
+		  return find(current.rightChild, key);
+	  else
+		  return null;
 	 }
   /*
    * insertion d'une valeur 
@@ -87,27 +96,52 @@ public class RedBlackTree<T extends Comparable<? super T> >
    }
    private void insertionCase1 ( RBNode<T> X )
    {
-      // A MODIFIER/COMPLETER
+      if(root == X)
+    	  X.setToBlack();
+      else
+    	  insertionCase2(X);
    }
 
    private void insertionCase2( RBNode<T> X )
    {
-      // A MODIFIER/COMPLETER
+      if(!X.parent.isBlack())
+    	  insertionCase3(X);
    }
 
    private void insertionCase3( RBNode<T> X )
    {
-     // A MODIFIER/COMPLETER
+     if(X.parent.isRed() && X.uncle().isRed()){
+    	 X.parent.setToBlack();
+    	 X.uncle().setToBlack();
+    	 X.grandParent().setToRed();
+    	 insertionCases(X.grandParent());
+     }else
+    	 insertionCase4(X);
    }
 
    private void insertionCase4( RBNode<T> X )
    {
-      // A MODIFIER/COMPLETER
+      if(X.parent.isRed() && X.uncle().isBlack()&& X.parent.leftChild == X && X.grandParent().rightChild == X.parent){
+    	  rotateRight(X.parent);
+    	  insertionCases(X.rightChild);
+      }else if(X.parent.isRed() && X.uncle().isBlack()&& X.parent.rightChild == X && X.grandParent().leftChild == X.parent){
+    	  rotateLeft(X.parent);
+    	  insertionCases(X.leftChild);
+      }else
+    	  insertionCase5(X);
    }
 
    private void insertionCase5( RBNode<T> X )
    {
-      // A MODIFIER/COMPLETER
+      if(X.parent.isRed() && X.uncle().isBlack() && X.parent.rightChild == X && X.grandParent().rightChild == X.parent){
+    	  X.grandParent().setToRed();
+    	  X.parent.setToBlack();
+    	  rotateLeft(X.grandParent());
+      }else if(X.parent.isRed() && X.uncle().isBlack() && X.parent.leftChild == X && X.grandParent().leftChild == X.parent){
+    	  X.grandParent().setToRed();
+    	  X.parent.setToBlack();
+    	  rotateRight(X.grandParent());
+      }
    }
    
    private void rotateLeft( RBNode<T> P )
@@ -189,8 +223,11 @@ public class RedBlackTree<T extends Comparable<? super T> >
    {
      // A MODIFIER/COMPLETER
 	 //pour ne pas afficher la virgule apres le dernier element
-	   if(P != null){
-		   System.out.print(toString());
+	   if(P.value != null){
+		   if(P != root)
+			   System.out.print(" ; ("+P.toString()+")");
+		   else
+			   System.out.print("("+P.toString()+")");
 		   printTreePreOrder(P.leftChild);
 		   printTreePreOrder(P.rightChild);
 	   }
@@ -198,19 +235,26 @@ public class RedBlackTree<T extends Comparable<? super T> >
    private void printTreePostOrder( RBNode<T> P )
    {
       // A MODIFIER/COMPLETER
-	   if(P != null){
-		   printTreePreOrder(P.leftChild);
-		   printTreePreOrder(P.rightChild);
-		   System.out.print(toString());
+	   if(P.value != null){
+		   printTreePostOrder(P.leftChild);
+		   printTreePostOrder(P.rightChild);
+		   if(P != root)
+			   System.out.print("("+P.toString()+") ; ");
+		   else
+			   System.out.print("("+P.toString()+")");
 	   }
    }
      
    private void printTreeAscendingOrder( RBNode<T> P )
    {
       // A MODIFIER/COMPLETER
-	   if(P != null){
+	   if(P.value != null){
 		   printTreeAscendingOrder(P.leftChild);
-		   System.out.print(toString());
+		   System.out.print("("+P.toString()+")");
+		   if(P.uncle() != null &&((int)P.value < (int)P.uncle().value || (int)P.value < (int)P.sibling().value))
+			   System.out.print(" ; ");
+		   else if(P.uncle() == null)
+			   System.out.print(" ; ");
 		   printTreeAscendingOrder(P.rightChild);
 	   }
 	   
@@ -219,10 +263,14 @@ public class RedBlackTree<T extends Comparable<? super T> >
    private void printTreeDescendingOrder( RBNode<T> P )
    {
       // A MODIFIER/COMPLETER
-	   if(P != null){
-		   printTreeAscendingOrder(P.rightChild);
-		   System.out.print(toString());
-		   printTreeAscendingOrder(P.leftChild);
+	   if(P.value != null){
+		   printTreeDescendingOrder(P.rightChild);
+		   System.out.print("("+P.toString()+")");
+		   if(P.uncle() != null &&((int)P.value > (int)P.uncle().value || (int)P.value > (int)P.sibling().value))
+			   System.out.print(" ; ");
+		   else if(P.uncle() == null)
+			   System.out.print(" ; ");
+		   printTreeDescendingOrder(P.leftChild);
 	   }
    }
    
@@ -238,8 +286,15 @@ public class RedBlackTree<T extends Comparable<? super T> >
          q.add(root);
          
          // A COMPLETER
-		 
-		 
+		 while(q.peek().value != null){
+			RBNode<T> temp = q.remove();
+			if(temp != root)
+				System.out.print(" ; ("+temp.toString()+")");
+			else
+				System.out.print("("+root.toString()+")");
+		 	q.add(temp.leftChild);
+		 	q.add(temp.rightChild);
+		 }
          System.out.println( " ]");
       }
       return;
@@ -283,7 +338,7 @@ public class RedBlackTree<T extends Comparable<? super T> >
     		  if(value.compareTo(grandParent().value) < 0){
     			  if(grandParent().rightChild != null)
     				  return grandParent().rightChild; 
-    			  else
+    		  }else{
     				  if(grandParent().leftChild != null)
     					  return grandParent().leftChild; 
     		  }
