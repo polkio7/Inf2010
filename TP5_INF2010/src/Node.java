@@ -62,13 +62,15 @@ public class Node {
 
     	if(this.ordre == autre.ordre){
     		if(this.parent == null && autre.parent == null){
-    			if(this.valeur < autre.valeur){
+    			if(this.valeur <= autre.valeur){
     				this.addEnfant(autre);
+    				autre.parent = this;
     				this.ordre ++;
     				return this;
     			}	
     			else{
     				autre.addEnfant(this);
+    				this.parent = autre;
     				autre.ordre++;
     				return autre;
     			}
@@ -84,25 +86,41 @@ public class Node {
     	// à compléter
     	int temp;
     	temp = this.valeur;
-    	this.valeur = parent.getVal();
-    	parent.valeur = temp;
+    	if(parent !=null){
+    		this.valeur = parent.getVal();
+    		parent.valeur = temp;
+    	}
     }
 
     public ArrayList<Node> delete() {
         // à compléter
-        while(parent != null){
-        	moveUp();
+    	//moveUp();
+    	
+    	while(parent != null){
+        	this.moveUp();
         }
-        for(int i=0;i<enfants.size();i++){
+        /*
+    	for(int i=0;i<enfants.size();i++){
         	enfants.get(i).parent = null;
-        }
+        }*/
     	return enfants;
     }
 
     public void print(String tabulation) {
         // à compléter
-    	String retour="";
-    	
+    	System.out.print(tabulation+this.valeur);
+    	if(this.getEnfants().size()>0){
+    		enfants.get(0).print("\t");
+    		System.out.println();
+    	}
+    	if(this.getEnfants().size()>1){
+
+    		enfants.get(1).print(tabulation+"\t");
+
+    	}
+    	if(this.getEnfants().size()>2){
+    		enfants.get(2).print(tabulation +"\t");
+    	}
     }
     
     public Node findValue(int valeur) {
