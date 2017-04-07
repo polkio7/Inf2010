@@ -26,9 +26,13 @@ public class NodeTest {
 		
 		a.print("");
 		
-		g.delete();
+		ArrayList<Node> listD = new ArrayList<Node>(g.delete());
 		
-		a.print("");
+		for(int i=0;i<listD.size();i++){
+			listD.get(i).print("");
+			System.out.println();
+		}
+	
 		
 	}
 

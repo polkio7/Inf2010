@@ -94,32 +94,31 @@ public class Node {
 
     public ArrayList<Node> delete() {
         // à compléter
-    	//moveUp();
-    	
-    	while(parent != null){
+    
+    	if(parent != null){
         	this.moveUp();
+        	return this.parent.delete();
+        }else{
+        	
+        	for(int i=0;i<enfants.size();i++){
+        		enfants.get(i).parent = null;
+            }
+        	
         }
-        /*
-    	for(int i=0;i<enfants.size();i++){
-        	enfants.get(i).parent = null;
-        }*/
+    	
     	return enfants;
     }
 
     public void print(String tabulation) {
         // à compléter
     	System.out.print(tabulation+this.valeur);
-    	if(this.getEnfants().size()>0){
-    		enfants.get(0).print("\t");
-    		System.out.println();
-    	}
-    	if(this.getEnfants().size()>1){
-
-    		enfants.get(1).print(tabulation+"\t");
-
-    	}
-    	if(this.getEnfants().size()>2){
-    		enfants.get(2).print(tabulation +"\t");
+    	for(int i=0;i<this.getEnfants().size();i++){
+    		if(i==0){
+    			enfants.get(i).print("\t");
+    			System.out.println();
+    		}
+    		else
+    			enfants.get(i).print(tabulation+"\t");
     	}
     }
     
