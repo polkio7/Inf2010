@@ -128,13 +128,17 @@ public class Node {
     
     public Node findValue (Node n, int valeur) {
         // à compléter
-    	if(!enfants.isEmpty())
-    		for(int i=0;i<enfants.size();i++){
-    			if(enfants.get(i).getVal() == valeur){
-    				return enfants.get(i);
+    	if(n.getVal() == valeur)
+    		return n;
+    	if(!n.enfants.isEmpty())
+    		for(int i=0;i<n.enfants.size();i++){
+    			if(n.enfants.get(i).getVal() == valeur){
+    				return n.enfants.get(i);
     			}else
-    				if (enfants.get(i).getVal() > valeur){
-    					return findValue(enfants.get(i),valeur);
+    				if (n.enfants.get(i).getVal() < valeur){
+    					Node nodeFound = findValue(n.enfants.get(i),valeur);
+    					 if(nodeFound != null)
+    						 return nodeFound;
     				}
     		}
     	return null;
