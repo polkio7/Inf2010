@@ -15,8 +15,8 @@ public class Bellman {
 	
 	public Bellman (Graph g) {
 		this.graph = g;
-		List<Vector<Double>> piTable = new ArrayList<Vector<Double>>();
-		List<Vector<Integer>> rTable = new ArrayList<Vector<Integer>>();
+		piTable = new ArrayList<Vector<Double>>();
+		rTable = new ArrayList<Vector<Integer>>();
 	}
 	
 	public void setSourceNode(Node source) {
@@ -25,29 +25,49 @@ public class Bellman {
 	
 	public void shortestPath() {
 		// completer
-		int k=0;
+		int k=1;
 		int n=graph.getNodes().size();
-		Node s=this.sourceNode;
 		//Première ligne du piTable et RTable
-		piTable.get(0).add(0.0);
-		for(int i=1;i<n;i++){
+		piTable.add(0, new Vector<Double>());
+		rTable.add(0, new Vector<Integer>());
+		for(int i=0;i<n;i++){
 			piTable.get(0).add(Graph.inf);
 			rTable.get(0).add(null);
 		}
-		int x=0;
+		piTable.get(0).set(sourceNode.getId(),0.0);
+		boolean allEqual = true;
 		//Étape6
-		for(k=1;k<n;k++){
+		do{
+			piTable.add(k, new Vector<Double>());
+			rTable.add(k, new Vector<Integer>());
 			//Étape 3 À COMPLETER
-			for(x=0;x<piTable.get(k).size();x++){
-				double minPredeceur=0;
-				
-				double element = Math.min(piTable.get(k-1).get(x),0  );
-				piTable.get(k).set(x, element); 
+			
+			for(int x=0;x<n;x++){
+				double minPredeceur=Graph.inf;
+				List<Edge> nNeg = graph.getInEdges(graph.getNodes().get(x));
+				Edge yMin = null;
+				for(Edge y : nNeg){
+					if(piTable.get(k-1).get(y.getSource().getId()) + y.getDistance() < minPredeceur){
+						minPredeceur = piTable.get(k-1).get(y.getSource().getId())+y.getDistance();
+						yMin = y;
+					}
+				}
+				double element = Math.min(piTable.get(k-1).get(x), minPredeceur);
+				piTable.get(k).add(element); 
+				if(piTable.get(k-1).get(x) >= minPredeceur && yMin != null && piTable.get(k-1).get(x) != 0){
+					rTable.get(k).add(yMin.getSource().getId());
+				}else{
+					rTable.get(k).add(null);
+				}
 			}
-			//Étape 4 À COMPLETER
-			//Étape 5 À COMPLETER
-		}
-		//Étape 7
+			allEqual = piTable.get(k).equals(piTable.get(k-1));
+			if(k == n)
+				return;//circuit negatif
+			if(k < n)
+			k++;
+		}while(!allEqual);
+		
+		
 	}
 	
 	public void  diplayShortestPaths() {
@@ -58,6 +78,44 @@ public class Bellman {
 
 	public void displayTables() {
 		// A completer
-		
+		//piTable
+		System.out.println("<< PITable >>:");
+		System.out.print("k :");
+		for(Node node: graph.getNodes()){
+			System.out.print("  "+node.getName()+"  ");
+			
+		}
+		System.out.println();
+		for(int k = 0; k < piTable.size(); k++){
+			System.out.print(k+" :");
+			for(int x = 0; x < piTable.get(k).size(); x++){
+				if(piTable.get(k).get(x) != Graph.inf){
+					System.out.print("  "+piTable.get(k).get(x));
+				}else{
+					System.out.print("  inf");
+				}
+			}
+			System.out.println();
+		}
+		System.out.println();
+		// rTable
+		System.out.println("<< RTable >>:");
+		System.out.print("k :");
+		for (Node node : graph.getNodes()) {
+			System.out.print("  " + node.getName() + "  ");
+
+		}
+		System.out.println();
+		for (int k = 0; k < rTable.size(); k++) {
+			System.out.print(k + " :");
+			for (int x = 0; x < rTable.get(k).size(); x++) {
+				if (rTable.get(k).get(x) != null) {
+					System.out.print("  " + graph.getNodes().get(rTable.get(k).get(x)).getName()+"  ");
+				} else {
+					System.out.print("  -  ");
+				}
+			}
+			System.out.println();
+		}
 	}
 }
