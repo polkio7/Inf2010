@@ -47,7 +47,12 @@ public class Graph {
 						if(line.charAt(i)=='i'){
 							edges.add(new Edge(nodes.get(lineNumber),nodes.get(nodeNumber),inf) );
 							i+=2;
-						}else{
+						}else if(line.charAt(i)=='-'){
+							String value = line.charAt(i) + line.charAt(i+1)+"";
+							edges.add(new Edge(nodes.get(lineNumber),nodes.get(nodeNumber),Integer.parseInt(value)) );
+							i+=1;
+						}
+						else{
 							edges.add(new Edge(nodes.get(lineNumber),nodes.get(nodeNumber),Integer.parseInt(line.charAt(i)+"")) );
 						}
 					}else

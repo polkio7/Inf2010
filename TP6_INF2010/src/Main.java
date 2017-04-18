@@ -14,6 +14,6 @@ public class Main {
 		bl.shortestPath();
 		bl.displayTables();
 		// Exerice 3: affichage des plus courts chemins
-		//bl.diplayShortestPaths();	
+		bl.diplayShortestPaths();	
 	}
 }

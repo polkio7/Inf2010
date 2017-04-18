@@ -73,9 +73,49 @@ public class Bellman {
 	public void  diplayShortestPaths() {
 		Stack<Node> path=new Stack<Node>();
 		// A completer	
+		//Regarder s'il y a des chemins négatifs
+		boolean negatif=false;
+		int firstNeg;
+		int piTableMax = piTable.size()-1;
+		for(int i=0;i<(piTable.get(piTableMax).size());i++){
+			if(piTable.get(piTableMax).get(i) < 0){
+				negatif = true;
+				firstNeg = i;
+			}
+		}
+		if(negatif){
+			String header;
+			String chemin;
+			System.out.println("==> le graphe contient un circuit négatif :");
+			
+			
+		}else{
+			String header;
+			String chemin;
+			System.out.println("=> les chemins sont :");
+			for(int i=1;i<piTable.get(piTableMax).size();i++){
+				header="";
+				header = "["+graph.getNodes().get(0).getName()+ " - " + graph.getNodes().get(i).getName()+"]";
+				chemin="";
+			
+				chemin = graph.getNodes().get(i).getName();
+				int pointeur=i;
+				while(pointeur != 0){
+					chemin = graph.getNodes().get(rTable.get(piTableMax).get(pointeur)).getName()+ " -> " + chemin;
+					pointeur=rTable.get(piTableMax).get(pointeur);
+				}
+				System.out.println(header+" "+piTable.get(piTableMax).get(i)+" : " +chemin);
+			}
+		}
 		
 	}
-
+	private String shortestPaths(int index,int piTableMax){
+		String ret ="";
+		if(rTable.get(piTableMax).get(index)!=0){
+			ret = graph.getNodes().get(index).getName()+shortestPaths(index,piTableMax);
+		}
+		return ret; 
+	}
 	public void displayTables() {
 		// A completer
 		//piTable
@@ -117,5 +157,6 @@ public class Bellman {
 			}
 			System.out.println();
 		}
+		System.out.println();
 	}
 }
