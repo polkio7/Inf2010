@@ -48,7 +48,7 @@ public class Graph {
 							edges.add(new Edge(nodes.get(lineNumber),nodes.get(nodeNumber),inf) );
 							i+=2;
 						}else if(line.charAt(i)=='-'){
-							String value = line.charAt(i) + line.charAt(i+1)+"";
+							String value = line.charAt(i)+ ""+ line.charAt(i+1)+"";
 							edges.add(new Edge(nodes.get(lineNumber),nodes.get(nodeNumber),Integer.parseInt(value)) );
 							i+=1;
 						}

@@ -1,8 +1,5 @@
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -24,45 +21,49 @@ public class Bellman {
 	}
 	
 	public void shortestPath() {
-		// completer
+		// etape 1
 		int k=1;
 		int n=graph.getNodes().size();
 		//Première ligne du piTable et RTable
 		piTable.add(0, new Vector<Double>());
 		rTable.add(0, new Vector<Integer>());
+		//etape 2
 		for(int i=0;i<n;i++){
 			piTable.get(0).add(Graph.inf);
 			rTable.get(0).add(null);
 		}
 		piTable.get(0).set(sourceNode.getId(),0.0);
 		boolean allEqual = true;
-		//Étape6
 		do{
 			piTable.add(k, new Vector<Double>());
 			rTable.add(k, new Vector<Integer>());
-			//Étape 3 À COMPLETER
-			
+
 			for(int x=0;x<n;x++){
+				//etape 3
 				double minPredeceur=Graph.inf;
 				List<Edge> nNeg = graph.getInEdges(graph.getNodes().get(x));
 				Edge yMin = null;
 				for(Edge y : nNeg){
-					if(piTable.get(k-1).get(y.getSource().getId()) + y.getDistance() < minPredeceur){
+					if(piTable.get(k-1).get(y.getSource().getId()) != Graph.inf && piTable.get(k-1).get(y.getSource().getId()) + y.getDistance() < minPredeceur){
 						minPredeceur = piTable.get(k-1).get(y.getSource().getId())+y.getDistance();
 						yMin = y;
 					}
 				}
 				double element = Math.min(piTable.get(k-1).get(x), minPredeceur);
 				piTable.get(k).add(element); 
-				if(piTable.get(k-1).get(x) >= minPredeceur && yMin != null && piTable.get(k-1).get(x) != 0){
+				//etape 4
+				if(piTable.get(k-1).get(x) >= minPredeceur && yMin != null && x != sourceNode.getId()){
 					rTable.get(k).add(yMin.getSource().getId());
 				}else{
 					rTable.get(k).add(null);
 				}
 			}
+			//etape 5
 			allEqual = piTable.get(k).equals(piTable.get(k-1));
+			//etape 7
 			if(k == n)
 				return;//circuit negatif
+			//etape 6
 			if(k < n)
 			k++;
 		}while(!allEqual);
@@ -73,49 +74,56 @@ public class Bellman {
 	public void  diplayShortestPaths() {
 		Stack<Node> path=new Stack<Node>();
 		// A completer	
+		
+		int n =graph.getNodes().size();
 		//Regarder s'il y a des chemins négatifs
-		boolean negatif=false;
-		int firstNeg;
-		int piTableMax = piTable.size()-1;
-		for(int i=0;i<(piTable.get(piTableMax).size());i++){
-			if(piTable.get(piTableMax).get(i) < 0){
-				negatif = true;
-				firstNeg = i;
-			}
-		}
-		if(negatif){
-			String header;
-			String chemin;
-			System.out.println("==> le graphe contient un circuit négatif :");
-			
-			
-		}else{
-			String header;
-			String chemin;
-			System.out.println("=> les chemins sont :");
-			for(int i=1;i<piTable.get(piTableMax).size();i++){
-				header="";
-				header = "["+graph.getNodes().get(0).getName()+ " - " + graph.getNodes().get(i).getName()+"]";
-				chemin="";
-			
-				chemin = graph.getNodes().get(i).getName();
-				int pointeur=i;
-				while(pointeur != 0){
-					chemin = graph.getNodes().get(rTable.get(piTableMax).get(pointeur)).getName()+ " -> " + chemin;
-					pointeur=rTable.get(piTableMax).get(pointeur);
+		if(piTable.size() == n+1){//negatif (k = n)
+
+			System.out.println("==> le graphe contient un circuit de coût négatif :\n");
+			boolean circuit = false;
+			for(int x = 0; x < piTable.get(n).size(); x++){
+				if(piTable.get(n).get(x) < 0){
+					path.push(graph.getNodes().get(x));
+					while(path.peek() != sourceNode){
+						path.push(graph.getNodes().get(rTable.get(n).get(path.peek().getId())));
+						if(path.peek() == path.firstElement()){//tester si on a un circuit
+							circuit = true;
+							break;
+						}
+					}
+					if(!circuit)
+						path.clear();//vider le path pour recommencer si on a pas trouve le circuit
 				}
-				System.out.println(header+" "+piTable.get(piTableMax).get(i)+" : " +chemin);
+				if(circuit)//Stop si on a un circuit
+					break;
+			}
+			System.out.print("["+path.peek().getName()+" - "+path.peek().getName()+"] :");
+			System.out.print(" "+path.pop().getName());
+			while(!path.isEmpty()){
+				System.out.print(" -> "+path.pop().getName());
+			}
+		}else{
+			n=piTable.size()-1;
+			System.out.println("=> les chemins sont :\n");
+			for(int x=0;x<piTable.get(n).size();x++){
+				if(x != sourceNode.getId()){
+					path.push(graph.getNodes().get(x));
+					while(path.peek() != sourceNode){
+						path.push(graph.getNodes().get(rTable.get(n).get(path.peek().getId())));
+					}
+					System.out.print("["+path.peek().getName()+" - "+path.firstElement().getName()+"] "+piTable.get(n).get(x)+ " :");
+					System.out.print(" "+path.pop().getName());
+					while(!path.isEmpty()){
+						System.out.print(" -> "+path.pop().getName());
+					}
+					System.out.println();
+				}
+				
 			}
 		}
 		
 	}
-	private String shortestPaths(int index,int piTableMax){
-		String ret ="";
-		if(rTable.get(piTableMax).get(index)!=0){
-			ret = graph.getNodes().get(index).getName()+shortestPaths(index,piTableMax);
-		}
-		return ret; 
-	}
+
 	public void displayTables() {
 		// A completer
 		//piTable

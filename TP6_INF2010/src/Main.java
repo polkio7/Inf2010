@@ -4,7 +4,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		// Exerice 1: creation de graphe à partir du fichier 
 		Graph g = new Graph();
-		g.readFromFile("./src/graphe.txt",",");
+		g.readFromFile("./src/grapheneg.txt",",");
 		//g.displayGraph();
 		// Exerice 2: calcul du plus court chemin de source vers tous les sommet
 		
